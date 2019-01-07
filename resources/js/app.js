@@ -21,7 +21,7 @@ const toast = Swal.mixin({
   timer: 3000
 });
 
-window.toast = toast;
+window.toast = toast; 
 
 
 window.Form = Form;
@@ -61,6 +61,8 @@ Vue.filter('upText', function(text){
 Vue.filter('myDate', function(created){
   return moment(created).format('MMMM Do YYYY');
 });
+
+window.Fire = new Vue(); // custom event
 
 /**
  * The following block of code may be used to automatically register your
