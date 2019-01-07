@@ -117,6 +117,7 @@
                 editmode:true,
                 users:{},
                 form: new Form({
+                    id:'', // we use this o we can the id when editing sendin to database
                     name: '',
                     email: '',
                     password:'',
@@ -127,10 +128,7 @@
             }
         },
         methods: {  
-            updateUser(){
-
-            },          
-            newModal(){
+             newModal(){
                 this.editmode = false;
                 this.form.reset();
                  $('#addNew').modal('show');   
@@ -141,6 +139,24 @@
                  $('#addNew').modal('show');
                  this.form.fill(user);
             },
+            updateUser(){
+                this.$Progress.start();
+                this.form.put('api/user/' +this.form.id)
+                .then(()=>{
+                    //success
+                    $('#addNew').modal('hide');
+                     Swal('Updated!', 'Information has been Updated.', 'success')
+                            Fire.$emit('AfterCreate'); // emite create event, with name 'AfterCreate'
+                            this.$Progress.finish();
+                })
+                .catch(()=>{
+                    this.$Progress.fail();
+                    //errors
+                     $('#addNew').modal('show');
+                    swal("Failed", "There was something wrong.", "warning")
+                });
+            },          
+           
             deleteUser(id){
                 Swal({
                     title: 'Are you sure?',
