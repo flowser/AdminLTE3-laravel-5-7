@@ -157,6 +157,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <div class="image">
                     <img src="{{URL::asset('img/profile.png')}}" class="img-circle elevation-2" alt="User Image">
                 </div>
+
                 <div class="info">
                     <a href="#" class="d-block">
                          {{ Auth::user()->name }}
@@ -171,7 +172,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                          with font-awesome or any other icon font library -->
                          <li class="nav-item">
                                 <router-link to="/dashboard" class="nav-link">
-                                    <i class="nav-icon fas fa-tachometer"></i>
+                                    <i class="nav-icon green fas fa-cog"></i>
                                     <p>
                                        Dashboard
                                     </p>
@@ -179,32 +180,32 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             </li>
                             <li class="nav-item">
                                     <router-link to="/profile" class="nav-link">
-                                        <i class="nav-icon fas fa-user"></i>
+                                        <i class="nav-icon purple fas fa-user"></i>
                                         <p>
                                            Profile
                                         </p>
                                     </router-link>
                                 </li>
-                    <li class="nav-item has-treeview menu-open">
-                        <a href="#" class="nav-link active">
-                            <i class="nav-icon fas fa-tachometer-alt"></i>
+                    <li class="nav-item has-treeview">
+                        <a href="#" class="nav-link ">
+                            <i class="nav-icon  red fas fa-cog"></i>
                             <p>
-                                Manage
+                                Management
                                 <i class="right fa fa-angle-left"></i>
                             </p>
                         </a>
                         <ul class="nav nav-treeview">
                             <li class="nav-item">
-                                <a href="#" class="nav-link active">
-                                    <i class="fa fa-user nav-icon"></i>
+                                <router-link to="/users" class="nav-link">
+                                    <i class="fa fa-users blue  nav-icon"></i>
                                     <p>Users</p>
-                                </a>
+                                </router-link>
                             </li>
                             <li class="nav-item">
-                                <a href="#" class="nav-link">
-                                    <i class="fa fa-circle-o nav-icon"></i>
+                                <router-link to="/roles" class="nav-link">
+                                    <i class="fa fa-cog orange nav-icon"></i>
                                     <p>Roles</p>
-                                </a>
+                                </router-link>
                             </li>
                         </ul>
                     </li>                   
@@ -220,8 +221,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
         <!-- Main content -->
         <div class="content"  >
-            <div class="container-fluid">
-               
+            <div class="container-fluid">               
                 <router-view></router-view>
 
             </div><!-- /.container-fluid -->
@@ -233,28 +233,38 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- Control Sidebar right -->
     <aside class="control-sidebar control-sidebar-dark">
         <!-- Control sidebar content goes here -->
-        <li class="nav-item has-treeview menu-open">
-            <a href="#" class="nav-link ">
-                <i class="nav-icon fas fa-user"></i>
-                <p>
-                    Profile                   
-                </p>
-            </a>
-            <ul class="nav nav-treeview">
-                <li class="nav-item">
-                    <a href="#" class="nav-link active">
-                        <i class="fa fa-cog nav-icon"></i>
-                        <p>Settings</p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="fa fa-log-off"></i>
-                        <p>Logout</p>
-                    </a>
-                </li>
-            </ul>
-        </li>  
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+            <!-- Add icons to the links using the .nav-icon class
+                 with font-awesome or any other icon font library -->                
+            <li class="nav-item has-treeview ">
+                <a href="#" class="nav-link ">
+                    <i class="nav-icon fas purple fa-user"></i>
+                    <p>
+                        Profile
+                        <i class="right fa fa-angle-left"></i>
+                    </p>
+                </a>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="fa fa-cog yellow nav-icon"></i>
+                            <p>Settings</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">                        
+                        <a class="nav-link" href="{{ route('logout') }}"
+                        onclick="event.preventDefault();
+                                      document.getElementById('logout-form').submit();">
+                                       <i class="fa fa-power-off nav-icon blue"></i>
+                         <p>{{ __('Logout') }} </p>
+                     </a>
+                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                         @csrf
+                     </form>
+                    </li>
+                </ul>
+            </li>                   
+        </ul>                       
     </aside>
     <!-- /.control-sidebar -->
 
