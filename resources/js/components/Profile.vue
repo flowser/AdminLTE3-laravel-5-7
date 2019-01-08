@@ -73,21 +73,21 @@
                                 <label for="name" class="col-sm-2 control-label">Name</label>
 
                                 <div class="col-sm-12">
-                                <input type="name" class="form-control" id="name" placeholder="Name">
+                                <input type="name" v-model="form.name" class="form-control" id="name" placeholder="Name">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="email" class="col-sm-2 control-label">Email</label>
 
                                 <div class="col-sm-12">
-                                <input type="email" class="form-control" id="email" placeholder="Email Address">
+                                <input type="email" v-model="form.email" class="form-control" id="email" placeholder="Email Address">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="experience" class="col-sm-2 control-label">Experience</label>
 
                                 <div class="col-sm-12">
-                                    <textarea type="text" class="form-control" id="experience" placeholder="Experience">
+                                    <textarea type="text" v-model="form.bio" class="form-control" id="experience" placeholder="Experience">
                                     </textarea>
                                  </div>
                             </div>
@@ -95,7 +95,7 @@
                                 <label for="photo" class="col-sm-2 control-label">Profile photo</label>
 
                                 <div class="col-sm-12">
-                                    <input type="file" class="form-control" name="photo" >
+                                    <input type="file" @change="updateProfile" name="photo" class="">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -116,7 +116,8 @@
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-offset-2 col-sm-10">
-                                <button type="submit" class="btn btn-danger">Submit</button>
+                                <button @click.prevent="updateInfo" type="submit" class="btn btn-danger">Submit</button>
+                                <!-- we use prevent to avoid page refresh -->
                                 </div>
                             </div>
                             </form>
@@ -135,8 +136,49 @@
 
 <script>
     export default {
+        data(){
+            return{
+                form: new Form({
+                    id:'', // we use this o we can the id when editing sendin to database
+                    name: '',
+                    email: '',
+                    password:'',
+                    type:'',
+                    bio:'',
+                    photo:'',                    
+                })
+            }
+        },
         mounted() {
             console.log('Component mounted.')
+        },
+        methods:{
+            updateInfo(){//post request to update server
+            this.form.put('api/profile')
+            .then(()=>{
+
+            })
+            .catch(()=>{
+
+            });
+            },
+            updateProfile(e){
+                //use e to denot event of file parameter
+                // console.log('uploading');
+                let file = e.target.files[0];  //var is same as let
+                // console.log(file);        //to know thefile details      
+                let reader = new FileReader();
+                reader.onloadend = (file)=> { //assign phototoserver E^ version, 
+                //  function() is the same as (file)=> photo
+                    // console.log('RESULT', reader.result)
+                    this.form.photo = reader.result;
+                }
+                reader.readAsDataURL(file);
+            }            
+        },
+        created(){
+            axios.get("api/profile")
+            .then(({data})=>(this.form.fill(data)));
         }
     }
 </script>
