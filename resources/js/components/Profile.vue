@@ -73,22 +73,27 @@
                                 <label for="name" class="col-sm-2 control-label">Name</label>
 
                                 <div class="col-sm-12">
-                                <input type="name" v-model="form.name" class="form-control" id="name" placeholder="Name">
+                                <input type="name" v-model="form.name" class="form-control" id="name" placeholder="Name"
+                                :class="{ 'is-invalid': form.errors.has('name') }">
+                                <has-error :form="form" field="name"></has-error>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="email" class="col-sm-2 control-label">Email</label>
 
                                 <div class="col-sm-12">
-                                <input type="email" v-model="form.email" class="form-control" id="email" placeholder="Email Address">
+                                <input type="email" v-model="form.email" class="form-control" id="email" placeholder="Email Address"
+                                :class="{ 'is-invalid': form.errors.has('email') }">
+                                 <has-error :form="form" field="email"></has-error>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="experience" class="col-sm-2 control-label">Experience</label>
+                                <label for="bio" class="col-sm-2 control-label">Bio</label>
 
                                 <div class="col-sm-12">
-                                    <textarea type="text" v-model="form.bio" class="form-control" id="experience" placeholder="Experience">
-                                    </textarea>
+                                    <textarea type="text" v-model="form.bio" class="form-control" id="bio" placeholder="Bio"
+                                     :class="{ 'is-invalid': form.errors.has('email') }"></textarea>
+                                    <has-error :form="form" field="bio"></has-error>
                                  </div>
                             </div>
                             <div class="form-group">
@@ -102,7 +107,9 @@
                                 <label for="password" class="col-sm-12 control-label"> Password (leave empty if not changing)</label>
 
                                 <div class="col-sm-12">
-                                <input type="password" class="form-control" id="password" placeholder="Password">
+                                <input type="password" v-model="form.password" class="form-control" id="password" placeholder="Password"
+                                :class="{ 'is-invalid': form.errors.has('password') }">
+                                 <has-error :form="form" field="password"></has-error>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -154,26 +161,37 @@
         },
         methods:{
             updateInfo(){//post request to update server
+            this.$Progress.start();
             this.form.put('api/profile')
             .then(()=>{
 
+               this.$Progress.finish(); 
             })
             .catch(()=>{
 
+
+                this.$Progress.fail();
             });
             },
-            updateProfile(e){
-                //use e to denot event of file parameter
-                // console.log('uploading');
-                let file = e.target.files[0];  //var is same as let
-                // console.log(file);        //to know thefile details      
+            updateProfile(e){   
+                //console.log('uploading);
+                let file = e.target.files[0];
+                // console.log(file);
                 let reader = new FileReader();
-                reader.onloadend = (file)=> { //assign phototoserver E^ version, 
-                //  function() is the same as (file)=> photo
-                    // console.log('RESULT', reader.result)
-                    this.form.photo = reader.result;
+                if(file['size'] < 2111777){
+                    reader.onloadend = (file) => {
+                        // console.log('RESULT', reader.result);
+                        this.form.photo = reader.result;
+                    }                               
+                    reader.readAsDataURL(file);
                 }
-                reader.readAsDataURL(file);
+                else{
+                    Swal({
+                        type:'error',
+                        title:'Oops',
+                        text:'You are uploading a large file',
+                    })
+                }
             }            
         },
         created(){

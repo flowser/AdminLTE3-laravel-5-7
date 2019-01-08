@@ -65,8 +65,7 @@
                         <div class="modal-body">
                             <div class="form-group">                    
                                 <input v-model="form.name" type="text" name="name"
-                                placeholder="Name"
-                                    class="form-control" :class="{ 'is-invalid': form.errors.has('name') }">
+                                placeholder="Name" class="form-control" :class="{ 'is-invalid': form.errors.has('name') }">
                                 <has-error :form="form" field="name"></has-error>
                             </div>
                             <div class="form-group">                    
@@ -153,7 +152,7 @@
                     this.$Progress.fail();
                     //errors
                      $('#addNew').modal('show');
-                    swal("Failed", "There was something wrong.", "warning")
+                    Swal("Failed", "There was something wrong.", "warning")
                 });
             },          
            
