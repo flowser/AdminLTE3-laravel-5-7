@@ -92,7 +92,7 @@
                                 <has-error :form="form" field="type"></has-error>
                             </div>
                             <div class="form-group">                    
-                                <input v-model="form.password" type="password" name="password" id="password"                   
+                                <input v-model="form.password" type="password" id="password" placeholder="Password"                
                                     class="form-control" :class="{ 'is-invalid': form.errors.has('password') }">
                                 <has-error :form="form" field="password"></has-error>
                             </div>

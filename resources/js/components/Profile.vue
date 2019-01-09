@@ -102,16 +102,27 @@
                                 <div class="col-sm-12">
                                     <input type="file" @change="updateProfile" name="photo" class="">
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="password" class="col-sm-12 control-label"> Password (leave empty if not changing)</label>
+                            </div>                  
 
+                            <!-- <div class="form-group">                    
+                                <input v-model="form.password" type="password" id="password" placeholder="Password"                
+                                    class="form-control" :class="{ 'is-invalid': form.errors.has('password') }">
+                                <has-error :form="form" field="password"></has-error>
+                            </div>         -->
+
+                            <div class="form-group">
+                                <label for="password" class="col-sm-12 control-label">Passport (leave empty if not changing)</label>
                                 <div class="col-sm-12">
-                                <input type="password" v-model="form.password" class="form-control" id="password" placeholder="Password"
-                                :class="{ 'is-invalid': form.errors.has('password') }">
-                                 <has-error :form="form" field="password"></has-error>
+                                    <input type="password"
+                                        v-model="form.password"
+                                        class="form-control"
+                                        id="password"
+                                        placeholder="Passport"
+                                        :class="{ 'is-invalid': form.errors.has('password') }">
+                                     <has-error :form="form" field="password"></has-error>
                                 </div>
                             </div>
+
                             <div class="form-group">
                                 <div class="col-sm-offset-2 col-sm-10">
                                 <div class="checkbox">
@@ -146,13 +157,13 @@
         data(){
             return{
                 form: new Form({
-                    id:'', // we use this o we can the id when editing sendin to database
+                    id: '', // we use this so we can the id when editing sendin to database
                     name: '',
                     email: '',
-                    password:'',
-                    type:'',
-                    bio:'',
-                    photo:'',                    
+                    password: '',
+                    type: '',
+                    bio: '',
+                    photo: '',                    
                 })
             }
         },
@@ -162,14 +173,16 @@
         methods:{
             updateInfo(){//post request to update server
             this.$Progress.start();
+            if(this.form.password == ""){ 
+          //in you write pass but delete later as no need to change it it rests to undfeined, noted in vue
+            this.form.password = undefined;
+        }
             this.form.put('api/profile')
             .then(()=>{
 
                this.$Progress.finish(); 
             })
             .catch(()=>{
-
-
                 this.$Progress.fail();
             });
             },

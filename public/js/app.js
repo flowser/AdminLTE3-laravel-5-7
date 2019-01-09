@@ -2018,12 +2018,23 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       form: new Form({
         id: '',
-        // we use this o we can the id when editing sendin to database
+        // we use this so we can the id when editing sendin to database
         name: '',
         email: '',
         password: '',
@@ -2042,6 +2053,12 @@ __webpack_require__.r(__webpack_exports__);
 
       //post request to update server
       this.$Progress.start();
+
+      if (this.form.password == "") {
+        //in you write pass but delete later as no need to change it it rests to undfeined, noted in vue
+        this.form.password = undefined;
+      }
+
       this.form.put('api/profile').then(function () {
         _this.$Progress.finish();
       }).catch(function () {
@@ -60113,7 +60130,7 @@ var render = function() {
                           staticClass: "col-sm-12 control-label",
                           attrs: { for: "password" }
                         },
-                        [_vm._v(" Password (leave empty if not changing)")]
+                        [_vm._v("Passport (leave empty if not changing)")]
                       ),
                       _vm._v(" "),
                       _c(
@@ -60136,7 +60153,7 @@ var render = function() {
                             attrs: {
                               type: "password",
                               id: "password",
-                              placeholder: "Password"
+                              placeholder: "Passport"
                             },
                             domProps: { value: _vm.form.password },
                             on: {
@@ -60723,8 +60740,8 @@ var render = function() {
                           },
                           attrs: {
                             type: "password",
-                            name: "password",
-                            id: "password"
+                            id: "password",
+                            placeholder: "Password"
                           },
                           domProps: { value: _vm.form.password },
                           on: {
@@ -76193,15 +76210,14 @@ __webpack_require__.r(__webpack_exports__);
 /*!*********************************************!*\
   !*** ./resources/js/components/Profile.vue ***!
   \*********************************************/
-/*! no static exports found */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Profile_vue_vue_type_template_id_3bd692e4___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Profile.vue?vue&type=template&id=3bd692e4& */ "./resources/js/components/Profile.vue?vue&type=template&id=3bd692e4&");
 /* harmony import */ var _Profile_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Profile.vue?vue&type=script&lang=js& */ "./resources/js/components/Profile.vue?vue&type=script&lang=js&");
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _Profile_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _Profile_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
-/* harmony import */ var _Profile_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Profile.vue?vue&type=style&index=0&lang=css& */ "./resources/js/components/Profile.vue?vue&type=style&index=0&lang=css&");
+/* empty/unused harmony star reexport *//* harmony import */ var _Profile_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Profile.vue?vue&type=style&index=0&lang=css& */ "./resources/js/components/Profile.vue?vue&type=style&index=0&lang=css&");
 /* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
@@ -76233,7 +76249,7 @@ component.options.__file = "resources/js/components/Profile.vue"
 /*!**********************************************************************!*\
   !*** ./resources/js/components/Profile.vue?vue&type=script&lang=js& ***!
   \**********************************************************************/
-/*! no static exports found */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
