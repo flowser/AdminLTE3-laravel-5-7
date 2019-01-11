@@ -19,7 +19,7 @@
                         <h5 class="widget-user-desc">Web Designer</h5>
                     </div>
                     <div class="widget-user-image">
-                        <img class="img-circle" src="" alt="User Avatar">
+                        <img class="img-circle" :src="getProfilePhoto()" alt="User Avatar">
                     </div>
                     <div class="card-footer">
                         <div class="row">
@@ -102,13 +102,7 @@
                                 <div class="col-sm-12">
                                     <input type="file" @change="updateProfile" name="photo" class="">
                                 </div>
-                            </div>                  
-
-                            <!-- <div class="form-group">                    
-                                <input v-model="form.password" type="password" id="password" placeholder="Password"                
-                                    class="form-control" :class="{ 'is-invalid': form.errors.has('password') }">
-                                <has-error :form="form" field="password"></has-error>
-                            </div>         -->
+                            </div> 
 
                             <div class="form-group">
                                 <label for="password" class="col-sm-12 control-label">Passport (leave empty if not changing)</label>
@@ -171,6 +165,11 @@
             console.log('Component mounted.')
         },
         methods:{
+            getProfilePhoto(){
+                let photo = (this.form.photo.length > 200) ? this.form.photo : "img/profile/" + this.form.photo;
+                // return "img/profile/" + this.form.photo; //+ this.photo same as user=>photo (name saved in database)
+                return photo;
+            },
             updateInfo(){//post request to update server
             this.$Progress.start();
             if(this.form.password == ""){ 
@@ -179,7 +178,7 @@
         }
             this.form.put('api/profile')
             .then(()=>{
-
+                Fire.$emit('AfterCreate');
                this.$Progress.finish(); 
             })
             .catch(()=>{

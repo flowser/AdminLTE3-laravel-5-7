@@ -31,6 +31,7 @@ Vue.component(AlertError.name, AlertError)
 import VueRouter from 'vue-router'
 Vue.use(VueRouter)
 
+
 import VueProgressBar from 'vue-progressbar'
 Vue.use(VueProgressBar, {
   color: 'rgb(143, 255, 199)',
@@ -44,6 +45,7 @@ let routes = [
     { path: '/profile', component: require('./components/Profile.vue').default},
     { path: '/users', component: require('./components/Users.vue').default},
     { path: '/roles', component: require('./components/Roles.vue').default},
+    // { path: '/roless', component: require('./components/Roless.vue').default},
    
   ]
 

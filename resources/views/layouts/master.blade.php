@@ -159,8 +159,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 </div>
 
                 <div class="info">
-                    <a href="#" class="d-block">
+                <a href="{{route('role.index')}}" class="d-block">
                          {{ Auth::user()->name }}
+                        
                         </a>
                 </div>
             </div>
@@ -210,9 +211,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                 </router-link>
                             </li>
                             <li class="nav-item">
-                                <router-link to="/roles" class="nav-link">
-                                    <i class="fa fa-cog orange nav-icon"></i>
+                                  
+                                <router-link to="{{'roles'}}" class="nav-link">
+                                    <i class="fa fa-cog red nav-icon"></i>
                                     <p>Roles</p>
+                                    
                                 </router-link>
                             </li>
                         </ul>
@@ -229,7 +232,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
         <!-- Main content -->
         <div class="content"  >
-            <div class="container-fluid">               
+            <div class="container-fluid">     
+                {{-- {{$roles->count()}}      
+                @foreach($roles as $role)
+            <p>{{$role->name}}</p>
+                @endforeach     --}}
                 <router-view></router-view>
                 <vue-progress-bar></vue-progress-bar>
 
