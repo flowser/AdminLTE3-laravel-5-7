@@ -16,7 +16,7 @@ class PermissionController extends Controller
      */
     public function index()
     {
-        $permissions = Permission::latest()->paginate(6);
+        $permissions = Permission::latest()->paginate(20);
         return $permissions; 
     }
     /**
@@ -64,6 +64,9 @@ class PermissionController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $permission = Permission::findOrFail($id);
+        //delete the permission
+        $permission->delete();
+        return ['message', 'Permission Deleted'];
     }
 }

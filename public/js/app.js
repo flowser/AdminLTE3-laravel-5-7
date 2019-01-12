@@ -2274,12 +2274,21 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     //is same as users
     return {
-      //object user->name etc
-      checkedPermissions: [],
+      //object user->name etc   
+      editPermissionmode: true,
+      editRolemode: true,
       permissions: {},
       //this is an object (to do with foreach at view phase)                
       permissionform: new Form({
@@ -2292,17 +2301,35 @@ __webpack_require__.r(__webpack_exports__);
         //help in two way model bundling
         id: '',
         name: '',
-        permission: []
-      }) // roleform.permission: [],
-      // options: [
-      //   { text: 'One', value: 'A' },
-      //   { text: 'Two', value: 'B' },
-      //   { text: 'Three', value: 'C' }
-      // ]        
-
+        permission: [,]
+      })
     };
   },
   methods: {
+    updatePermission: function updatePermission() {
+      console.log('editing permission');
+    },
+    updateRole: function updateRole() {
+      console.log('editing role');
+    },
+    addPermissionModal: function addPermissionModal() {
+      this.permissionform.reset();
+      $('#Permission').modal('show');
+    },
+    editPermissionModal: function editPermissionModal(permission) {
+      this.permissionform.reset();
+      $('#Permission').modal('show');
+      this.permissionform.fill(permission); //we fill the dat from user to the form
+    },
+    addRoleModal: function addRoleModal() {
+      this.roleform.reset();
+      $('#Role').modal('show');
+    },
+    editRoleModal: function editRoleModal(role) {
+      this.roleform.reset();
+      $('#Role').modal('show');
+      this.roleform.fill(role); //we fill the dat from user to the form
+    },
     loadPermissions: function loadPermissions() {
       var _this = this;
 
@@ -2321,18 +2348,113 @@ __webpack_require__.r(__webpack_exports__);
       }); //convert this data  and store as roles objects
     },
     createPermission: function createPermission() {
+      var _this3 = this;
+
       //to send http request to our controller
-      // Submit the form via a POST request
-      this.permissionform.post('api/permission'); // .then(({ data }) => { console.log(data) })
+      this.$Progress.start(); // Submit the form via a POST request
+
+      this.permissionform.post('api/permission') // .then(({ data }) => { console.log(data) })
+      .then(function () {
+        // if successfully without any errors from form submission
+        Fire.$emit('AfterCreate'); //event
+
+        $('#Permission').modal('hide');
+        toast({
+          type: 'success',
+          title: 'Permission Created successfully'
+        });
+
+        _this3.$Progress.finish();
+      }).catch(function () {
+        toast({
+          type: 'error',
+          title: 'There are errors check  your form again'
+        });
+
+        _this3.$Progress.fail();
+      });
     },
     createRole: function createRole() {
-      this.roleform.post('api/role');
+      var _this4 = this;
+
+      this.$Progress.start();
+      this.roleform.post('api/role').then(function () {
+        Fire.$emit('AfterCreate'); //event
+
+        $('#Role').modal('hide');
+        toast({
+          type: 'success',
+          title: 'Role linked to Permissions Created successfully'
+        });
+
+        _this4.$Progress.finish();
+      }).catch(function () {
+        toast({
+          type: 'error',
+          title: 'There are errors check  your form again'
+        });
+
+        _this4.$Progress.fail();
+      });
+    },
+    deletePermission: function deletePermission(id) {
+      var _this5 = this;
+
+      Swal({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      }).then(function (result) {
+        if (result.value) {
+          //send request to the server
+          _this5.permissionform.delete('api/permission/' + id).then(function () {
+            Swal('Deleted!', 'The Permission has been deleted.', 'success');
+            Fire.$emit('AfterCreate'); // emite create event, with name 'AfterCreate'
+          }).catch(function () {
+            Swal("Failed", "There was something wrong.", "warning");
+          });
+        }
+      });
+    },
+    deleteRole: function deleteRole(id) {
+      var _this6 = this;
+
+      Swal({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      }).then(function (result) {
+        if (result.value) {
+          //send request to the server
+          _this6.roleform.delete('api/role/' + id).then(function () {
+            Swal('Deleted!', 'The Role has been deleted.', 'success');
+            Fire.$emit('AfterCreate'); // emite create event, with name 'AfterCreate'
+          }).catch(function () {
+            swal("Failed", "There was something wrong.", "warning");
+          });
+        }
+      });
     }
   },
   created: function created() {
+    var _this7 = this;
+
     //same mounted
     this.loadRoles();
     this.loadPermissions();
+    Fire.$on('AfterCreate', function () {
+      _this7.loadRoles();
+
+      _this7.loadPermissions();
+    });
   }
 });
 
@@ -60547,26 +60669,86 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "container" }, [
+  return _c("div", { staticClass: "container-fluid" }, [
     _c("div", { staticClass: "row mt-5" }, [
       _c("div", { staticClass: "col-md-6" }, [
         _c("div", { staticClass: "card" }, [
-          _vm._m(0),
+          _c("div", { staticClass: "card-header" }, [
+            _c("h3", { staticClass: "card-title" }, [
+              _vm._v("Permissions Table")
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "card-tools" }, [
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-success",
+                  on: { click: _vm.addPermissionModal }
+                },
+                [
+                  _vm._v(" Add New Permission \n                  "),
+                  _c("i", { staticClass: "fa fa-plus" })
+                ]
+              )
+            ])
+          ]),
           _vm._v(" "),
           _c("div", { staticClass: "card-body table-responsive p-0" }, [
             _c("table", { staticClass: "table table-hover" }, [
               _c(
                 "tbody",
                 [
-                  _vm._m(1),
+                  _vm._m(0),
                   _vm._v(" "),
                   _vm._l(_vm.permissions, function(permission) {
                     return _c("tr", { key: permission.id }, [
-                      _c("td", [_vm._v(_vm._s(permission.id))]),
+                      _c("td", [
+                        _vm._v(
+                          "                             \n                        " +
+                            _vm._s(permission.id) +
+                            "\n                    "
+                        )
+                      ]),
                       _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(permission.name))]),
+                      _c("td", [
+                        _c("span", { staticClass: "pl-2" }, [
+                          _c(
+                            "div",
+                            { staticClass: "btn btn-warning btn-md " },
+                            [_vm._v(" " + _vm._s(permission.name) + " ")]
+                          )
+                        ])
+                      ]),
                       _vm._v(" "),
-                      _vm._m(2, true)
+                      _c("td", [
+                        _c(
+                          "a",
+                          {
+                            attrs: { href: "#" },
+                            on: {
+                              click: function($event) {
+                                _vm.editPermissionModal(permission)
+                              }
+                            }
+                          },
+                          [_c("i", { staticClass: "fa fa-edit blue" })]
+                        ),
+                        _vm._v(
+                          "\n                       /\n                       "
+                        ),
+                        _c(
+                          "a",
+                          {
+                            attrs: { href: "#" },
+                            on: {
+                              click: function($event) {
+                                _vm.deletePermission(permission.id)
+                              }
+                            }
+                          },
+                          [_c("i", { staticClass: "fa fa-trash red " })]
+                        )
+                      ])
                     ])
                   })
                 ],
@@ -60579,36 +60761,97 @@ var render = function() {
       _vm._v(" "),
       _c("div", { staticClass: "col-md-6" }, [
         _c("div", { staticClass: "card" }, [
-          _vm._m(3),
+          _c("div", { staticClass: "card-header" }, [
+            _c("h3", { staticClass: "card-title" }, [_vm._v("Roles Table")]),
+            _vm._v(" "),
+            _c("div", { staticClass: "card-tools" }, [
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-success",
+                  on: { click: _vm.addRoleModal }
+                },
+                [
+                  _vm._v("Add New Role \n                  "),
+                  _c("i", { staticClass: "fa fa-plus" })
+                ]
+              )
+            ])
+          ]),
           _vm._v(" "),
           _c("div", { staticClass: "card-body table-responsive p-0" }, [
             _c("table", { staticClass: "table table-hover" }, [
               _c(
                 "tbody",
                 [
-                  _vm._m(4),
+                  _vm._m(1),
                   _vm._v(" "),
                   _vm._l(_vm.roles, function(role) {
-                    return _c("tr", { key: role.id }, [
+                    return _c("tr", { key: role.id, staticClass: "pl-2" }, [
                       _c("td", [_vm._v(_vm._s(role.id))]),
                       _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(role.name))]),
+                      _c("td", [
+                        _c("span", { staticClass: "pl-2" }, [
+                          _c("div", { staticClass: "btn btn-danger btn-md " }, [
+                            _vm._v(" " + _vm._s(role.name) + " ")
+                          ])
+                        ])
+                      ]),
                       _vm._v(" "),
                       _c(
                         "td",
                         _vm._l(role.permissions, function(permission) {
-                          return _c("span", { key: permission.id }, [
-                            _c(
-                              "div",
-                              { staticClass: "btn btn-warning btn-sm" },
-                              [_vm._v(_vm._s(permission.name) + " ")]
-                            )
-                          ])
+                          return _c(
+                            "span",
+                            { key: permission.id, staticClass: "pl-2" },
+                            [
+                              _c(
+                                "div",
+                                { staticClass: "btn btn-primary btn-md " },
+                                [_vm._v(_vm._s(permission.name) + " ")]
+                              )
+                            ]
+                          )
                         }),
                         0
                       ),
                       _vm._v(" "),
-                      _vm._m(5, true)
+                      _c(
+                        "td",
+                        [
+                          _vm._l(role.permissions, function(permission) {
+                            return _c(
+                              "a",
+                              {
+                                key: permission.id,
+                                attrs: { href: "#" },
+                                on: {
+                                  click: function($event) {
+                                    _vm.editRoleModal(role, permission)
+                                  }
+                                }
+                              },
+                              [_c("i", { staticClass: "fa fa-edit blue" })]
+                            )
+                          }),
+                          _vm._v(
+                            "\n                       /\n                       "
+                          ),
+                          _c(
+                            "a",
+                            {
+                              attrs: { href: "#" },
+                              on: {
+                                click: function($event) {
+                                  _vm.deleteRole(role.id)
+                                }
+                              }
+                            },
+                            [_c("i", { staticClass: "fa fa-trash red " })]
+                          )
+                        ],
+                        2
+                      )
                     ])
                   })
                 ],
@@ -60625,10 +60868,10 @@ var render = function() {
       {
         staticClass: "modal fade",
         attrs: {
-          id: "addNewPermission",
+          id: "Permission",
           tabindex: "-1",
           role: "dialog",
-          "aria-labelledby": "addNewPermissionLabel",
+          "aria-labelledby": "PermissionLabel",
           "aria-hidden": "true"
         }
       },
@@ -60641,7 +60884,7 @@ var render = function() {
           },
           [
             _c("div", { staticClass: "modal-content" }, [
-              _vm._m(6),
+              _vm._m(2),
               _vm._v(" "),
               _c(
                 "form",
@@ -60649,7 +60892,9 @@ var render = function() {
                   on: {
                     submit: function($event) {
                       $event.preventDefault()
-                      return _vm.createPermission($event)
+                      _vm.editPermissionmode
+                        ? _vm.updatePermission()
+                        : _vm.createPermission()
                     }
                   }
                 },
@@ -60664,57 +60909,43 @@ var render = function() {
                             {
                               name: "model",
                               rawName: "v-model",
-                              value: _vm.roleform.permission,
-                              expression: "roleform.permission"
+                              value: _vm.permissionform.name,
+                              expression: "permissionform.name"
                             }
                           ],
                           staticClass: "form-control",
                           class: {
-                            "is-invalid": _vm.roleform.errors.has("permission")
+                            "is-invalid": _vm.permissionform.errors.has("name")
                           },
-                          attrs: { name: "permission", id: "permission" },
-                          domProps: { value: _vm.roleform.permission },
+                          attrs: {
+                            type: "text",
+                            name: "name",
+                            placeholder: "Permission Name"
+                          },
+                          domProps: { value: _vm.permissionform.name },
                           on: {
                             input: function($event) {
                               if ($event.target.composing) {
                                 return
                               }
                               _vm.$set(
-                                _vm.roleform,
-                                "permission",
+                                _vm.permissionform,
+                                "name",
                                 $event.target.value
                               )
                             }
                           }
                         }),
                         _vm._v(" "),
-                        _c("option", { attrs: { value: "" } }, [
-                          _vm._v("Select User Role")
-                        ]),
-                        _vm._v(" "),
-                        _c("option", { attrs: { value: "admin" } }, [
-                          _vm._v(" Admin")
-                        ]),
-                        _vm._v(" "),
-                        _c("option", { attrs: { value: "user" } }, [
-                          _vm._v(" Standard User")
-                        ]),
-                        _vm._v(" "),
-                        _c("option", { attrs: { value: "Author" } }, [
-                          _vm._v("Author")
-                        ]),
-                        _vm._v(
-                          "\n                            >\n                            "
-                        ),
                         _c("has-error", {
-                          attrs: { form: _vm.roleform, field: "permission" }
+                          attrs: { form: _vm.permissionform, field: "name" }
                         })
                       ],
                       1
                     )
                   ]),
                   _vm._v(" "),
-                  _vm._m(7)
+                  _vm._m(3)
                 ]
               )
             ])
@@ -60728,10 +60959,10 @@ var render = function() {
       {
         staticClass: "modal fade",
         attrs: {
-          id: "addNewRole",
+          id: "Role",
           tabindex: "-1",
           role: "dialog",
-          "aria-labelledby": "addNewRoleLabel",
+          "aria-labelledby": "RoleLabel",
           "aria-hidden": "true"
         }
       },
@@ -60744,7 +60975,7 @@ var render = function() {
           },
           [
             _c("div", { staticClass: "modal-content" }, [
-              _vm._m(8),
+              _vm._m(4),
               _vm._v(" "),
               _c(
                 "form",
@@ -60752,7 +60983,7 @@ var render = function() {
                   on: {
                     submit: function($event) {
                       $event.preventDefault()
-                      return _vm.createRole($event)
+                      _vm.editRolemode ? _vm.updateRole() : _vm.createRole()
                     }
                   }
                 },
@@ -60802,67 +61033,112 @@ var render = function() {
                       1
                     ),
                     _vm._v(" "),
-                    _c("div", { staticClass: "form-group" }, [
-                      _c(
-                        "select",
-                        {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.roleform.permission,
-                              expression: "roleform.permission"
-                            }
-                          ],
-                          attrs: { multiple: "" },
-                          on: {
-                            change: function($event) {
-                              var $$selectedVal = Array.prototype.filter
-                                .call($event.target.options, function(o) {
-                                  return o.selected
-                                })
-                                .map(function(o) {
-                                  var val = "_value" in o ? o._value : o.value
-                                  return val
-                                })
-                              _vm.$set(
-                                _vm.roleform,
-                                "permission",
-                                $event.target.multiple
-                                  ? $$selectedVal
-                                  : $$selectedVal[0]
+                    _c(
+                      "div",
+                      { staticClass: "form-group" },
+                      [
+                        _c(
+                          "div",
+                          { staticClass: "btn btn-danger btn-md mb-2" },
+                          [
+                            _vm._v(
+                              " \n                                Hold Control, then Click for Multi select Permissions for this Role\n                            "
+                            )
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "select",
+                          {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.roleform.permission,
+                                expression: "roleform.permission"
+                              }
+                            ],
+                            staticClass: "form-control ",
+                            class: {
+                              "is-invalid": _vm.roleform.errors.has(
+                                "permission"
                               )
-                            }
-                          }
-                        },
-                        _vm._l(_vm.permissions, function(permission) {
-                          return _c(
-                            "option",
-                            {
-                              key: permission.id,
-                              domProps: { value: permission.name }
                             },
-                            [
-                              _vm._v(
-                                "\n                                    " +
-                                  _vm._s(permission.name) +
-                                  "\n                                "
-                              )
-                            ]
-                          )
+                            attrs: { multiple: "" },
+                            on: {
+                              change: function($event) {
+                                var $$selectedVal = Array.prototype.filter
+                                  .call($event.target.options, function(o) {
+                                    return o.selected
+                                  })
+                                  .map(function(o) {
+                                    var val = "_value" in o ? o._value : o.value
+                                    return val
+                                  })
+                                _vm.$set(
+                                  _vm.roleform,
+                                  "permission",
+                                  $event.target.multiple
+                                    ? $$selectedVal
+                                    : $$selectedVal[0]
+                                )
+                              }
+                            }
+                          },
+                          _vm._l(_vm.permissions, function(permission) {
+                            return _c(
+                              "option",
+                              {
+                                key: permission.id,
+                                domProps: { value: permission.name }
+                              },
+                              [
+                                _vm._v(
+                                  "\n                                    " +
+                                    _vm._s(permission.name) +
+                                    "\n                                    "
+                                )
+                              ]
+                            )
+                          }),
+                          0
+                        ),
+                        _vm._v(" "),
+                        _c("has-error", {
+                          attrs: { form: _vm.roleform, field: "permission" }
                         }),
-                        0
-                      ),
-                      _vm._v(" "),
-                      _c("br"),
-                      _vm._v(" "),
-                      _c("span", [
-                        _vm._v("Selected: " + _vm._s(_vm.roleform.permission))
-                      ])
-                    ])
+                        _vm._v(" "),
+                        _c("br"),
+                        _vm._v(" "),
+                        _c(
+                          "p",
+                          [
+                            _vm._v(
+                              " Permission Selected:\n                                "
+                            ),
+                            _vm._v(" "),
+                            _vm._l(_vm.roleform.permission, function(
+                              permission
+                            ) {
+                              return _c("span", { key: permission }, [
+                                _c(
+                                  "div",
+                                  {
+                                    staticClass: "btn btn-info btn-sm ml-2 mb-2"
+                                  },
+                                  [_vm._v(_vm._s(permission) + " ")]
+                                )
+                              ])
+                            })
+                          ],
+                          2
+                        )
+                      ],
+                      1
+                    )
                   ]),
                   _vm._v(" "),
-                  _vm._m(9)
+                  _vm._m(5)
                 ]
               )
             ])
@@ -60877,73 +61153,12 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "card-header" }, [
-      _c("h3", { staticClass: "card-title" }, [_vm._v("Permissions Table")]),
-      _vm._v(" "),
-      _c("div", { staticClass: "card-tools" }, [
-        _c(
-          "button",
-          {
-            staticClass: "btn btn-success",
-            attrs: {
-              "data-toggle": "modal",
-              "data-target": "#addNewPermission"
-            }
-          },
-          [
-            _vm._v("Add New Permission \n                  "),
-            _c("i", { staticClass: "fa fa-plus" })
-          ]
-        )
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
     return _c("tr", [
       _c("th", [_vm._v("ID")]),
       _vm._v(" "),
       _c("th", [_vm._v("Permission")]),
       _vm._v(" "),
       _c("th", [_vm._v("Modify")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", [
-      _c("a", { attrs: { href: "#" } }, [
-        _c("i", { staticClass: "fa fa-edit blue" })
-      ]),
-      _vm._v("\n                       /\n                       "),
-      _c("a", { attrs: { href: "#" } }, [
-        _c("i", { staticClass: "fa fa-trash red " })
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "card-header" }, [
-      _c("h3", { staticClass: "card-title" }, [_vm._v("Roles Table")]),
-      _vm._v(" "),
-      _c("div", { staticClass: "card-tools" }, [
-        _c(
-          "button",
-          {
-            staticClass: "btn btn-success",
-            attrs: { "data-toggle": "modal", "data-target": "#addNewRole" }
-          },
-          [
-            _vm._v("Add New Role \n                  "),
-            _c("i", { staticClass: "fa fa-plus" })
-          ]
-        )
-      ])
     ])
   },
   function() {
@@ -60964,24 +61179,10 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("td", [
-      _c("a", { attrs: { href: "#" } }, [
-        _c("i", { staticClass: "fa fa-edit blue" })
-      ]),
-      _vm._v("\n                       /\n                       "),
-      _c("a", { attrs: { href: "#" } }, [
-        _c("i", { staticClass: "fa fa-trash red " })
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
     return _c("div", { staticClass: "modal-header" }, [
       _c(
         "h5",
-        { staticClass: "modal-title", attrs: { id: "addNewPermissionLabel" } },
+        { staticClass: "modal-title", attrs: { id: "PermissionLabel" } },
         [_vm._v("Add New Permission")]
       ),
       _vm._v(" "),
@@ -61025,11 +61226,9 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "modal-header" }, [
-      _c(
-        "h5",
-        { staticClass: "modal-title", attrs: { id: "addNewRoleLabel" } },
-        [_vm._v("Add New Role")]
-      ),
+      _c("h5", { staticClass: "modal-title", attrs: { id: "RoleLabel" } }, [
+        _vm._v("Add New Role")
+      ]),
       _vm._v(" "),
       _c(
         "button",

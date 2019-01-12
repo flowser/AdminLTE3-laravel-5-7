@@ -72,6 +72,9 @@ class RoleController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $role = Role::findOrFail($id);
+        //delete the permission
+        $role->delete();
+        return ['message', 'Role Deleted'];
     }
 }
