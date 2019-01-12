@@ -2270,6 +2270,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     //is same as users
@@ -60590,7 +60594,19 @@ var render = function() {
                       _vm._v(" "),
                       _c("td", [_vm._v(_vm._s(role.name))]),
                       _vm._v(" "),
-                      _c("td", [_vm._v("permission")]),
+                      _c(
+                        "td",
+                        _vm._l(role.permissions, function(permission) {
+                          return _c("span", { key: permission.id }, [
+                            _c(
+                              "div",
+                              { staticClass: "btn btn-warning btn-sm" },
+                              [_vm._v(_vm._s(permission.name) + " ")]
+                            )
+                          ])
+                        }),
+                        0
+                      ),
                       _vm._v(" "),
                       _vm._m(5, true)
                     ])

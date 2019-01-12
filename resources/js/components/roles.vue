@@ -61,7 +61,11 @@
                     <tr v-for="role in roles" :key="role.id" >
                         <td>{{role.id}}</td>
                         <td>{{role.name}}</td>
-                        <td>permission</td>
+                        <td>
+                            <span v-for="permission in role.permissions" :key="permission.id">
+                                 <div class="btn btn-warning btn-sm">{{permission.name}} </div>
+                            </span>                         
+                        </td>
                         <td>
                            <a href="#"><i class="fa fa-edit blue"></i></a>
                            /
