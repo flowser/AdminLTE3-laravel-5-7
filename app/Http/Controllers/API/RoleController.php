@@ -15,10 +15,15 @@ class RoleController extends Controller
      */
     public function index()
     {
-        $roles=  Role::latest()->paginate(10);
+        $roles=  Role::latest()->with('permissions')->paginate(10);
         // dd($roles);
-        $roles->load('permissions');
+        // $roles->load('permissions');
         return $roles;
+    }
+    public function edit($id)
+    {
+       return $role = Role::with('permissions')->findOrFail($id);
+       ['message', 'this is good'];
     }
 
     /**

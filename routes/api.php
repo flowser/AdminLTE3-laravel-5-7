@@ -22,6 +22,7 @@ Route::apiResources([
     'permission'=> 'API\PermissionController', 
     'role'=> 'API\RoleController',    
     ]);
+Route::get('role/edit/{id}', 'API\RoleController@edit');
 Route::get('profile', 'API\UserController@profile');
 Route::put('profile', 'API\UserController@updateProfile');
 
